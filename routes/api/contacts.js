@@ -1,11 +1,7 @@
-const express = require('express')
-
+const express = require('express');
 const { createError } = require("../../helpers");
-
 const contacts = require("../../models");
-
 const router = express.Router();
-
 const contactSchema = require("./validation");
 
 router.get("/", async (res, next) => {
