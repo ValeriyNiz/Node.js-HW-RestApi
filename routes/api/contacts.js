@@ -1,12 +1,13 @@
 const express = require('express');
 const { createError } = require("../../helpers");
-const contacts = require("../../models");
+const {listContacts, getById, addContact, updateContact, removeContact} = require("../../models");
 const router = express.Router();
-const contactSchema = require("./validation");
+const validation = require("./validation");
+const {validate} = require('./validationMiddleware')
 
 router.get("/", async (res, next) => {
   try {
-    const result = await contacts.listContacts();
+    const result = await listContacts();
     res.json(result);
   } catch (error) {
     next(error);
@@ -16,7 +17,7 @@ router.get("/", async (res, next) => {
 router.get("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
-    const result = await contacts.getById(id);
+    const result = await getById(id);
     if (!result) {
       throw createError(404);
     }
@@ -26,29 +27,29 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.post("/", async (req, res, next) => {
+router.post("/", validate(validation.contactSchema), async (req, res, next) => {
   try {
-    const { error } = contactSchema.validate(req.body);
+    const { error } = req.body;
     if (error) {
       throw createError(400, error.message);
     }
     const { name, email, phone } = req.body;
-    const result = await contacts.addContact(name, email, phone);
+    const result = await addContact(name, email, phone);
     res.status(201).json(result);
   } catch (error) {
     next(error);
   }
 });
 
-router.put("/:id", async (req, res, next) => {
+router.put("/:id", validate(validation.contactSchema),async (req, res, next) => {
   try {
-    const { error } = contactSchema.validate(req.body);
+    const { error } = req.body;
     if (error) {
       throw createError(400, error.message);
     }
     const { id } = req.params;
     const { name, email, phone } = req.body;
-    const result = await contacts.updateContact(id, name, email, phone);
+    const result = await updateContact(id, name, email, phone);
     if (!result) {
       throw createError(404);
     }
@@ -61,7 +62,7 @@ router.put("/:id", async (req, res, next) => {
 router.delete("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
-    const result = await contacts.removeContact(id);
+    const result = await removeContact(id);
     if (!result) {
       throw createError(404);
     }
