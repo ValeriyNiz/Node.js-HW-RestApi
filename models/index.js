@@ -1,6 +1,6 @@
 const path = require("path");
 const fs = require("fs").promises;
-const { nanoid } = require("nanoid");
+const { v4: uuid } = require("uuid");
 
 const contactsPath = path.resolve("models", "contacts.json");
 
@@ -24,8 +24,9 @@ async function getById(id) {
 }
 
 async function addContact(name, email, phone) {
-    const contacts = await listContacts();
-    const newContact = { id: nanoid(), name, email, phone };
+  const contacts = await listContacts();
+    console.log(uuid);
+    const newContact = { id: uuid(), name, email, phone };
     contacts.push(newContact);
     await updateContacts(contacts);
     return newContact;

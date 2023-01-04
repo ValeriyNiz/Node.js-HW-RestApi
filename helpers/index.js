@@ -1,5 +1,6 @@
-const createError = require("./createError");
+const ServiceError = require('./serviceError');
+
 
 module.exports = {
-    createError
+    ServiceError
 }

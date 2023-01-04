@@ -4,7 +4,7 @@ const validate = (schema) => (req, res, next) => {
   } = schema.validate(req.body);
   if (error) {
     res.status(422)
-      .send(error.details[0].message);
+      .json({ message: error.details[0].message });
   } else {
     next();
   }
