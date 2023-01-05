@@ -1,5 +1,5 @@
 const statusMessages = {
-    404: "Not found 2"
+    404: "Not found"
 };
 class ServiceError extends Error {
     constructor(status, message = statusMessages[status]) {
