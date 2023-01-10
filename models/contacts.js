@@ -1,6 +1,5 @@
 const { Schema, model } = require("mongoose");
-const Joi = require("Joi");
-
+const {addSchema, updateFavoriteSchema} = require('../middlewares')
 const contactSchema = Schema(
   {
     name: {
@@ -21,20 +20,7 @@ const contactSchema = Schema(
   { versionKey: false }
 );
 
-const addSchema = Joi.object({
-  name: Joi.string()
-    .pattern(/^[a-zA-Z\s'’ʼ-]{3,30}$/)
-    .required(),
-  email: Joi.string().email().required(),
-  phone: Joi.string()
-    .pattern(/^[0-9()+\s-]{10,19}$/)
-    .required(),
-  favorite: Joi.bool(),
-});
 
-const updateFavoriteSchema = Joi.object({
-  favorite: Joi.bool().required(),
-});
 
 const schemas = {
   add: addSchema,
