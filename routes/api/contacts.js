@@ -1,77 +1,30 @@
-const { ServiceError } = require('../../helpers');
 const express = require('express');
-const {listContacts, getById, addContact, updateContact, removeContact} = require("../../models");
 const router = express.Router();
-const validation = require("./validation");
-const validate = require('./validationMiddleware')
+const {getAll, getById, add, updateById, updateFavorite, deleteById} = require("../../controllers/contacts");
+const { controllerWrapper } = require("../../helpers");
+const { validation, validationId } = require("../../middlewares");
+const { schemas } = require("../../models/contacts");
 
-router.get("/", async (req, res, next) => {
-  try {
-    const result = await listContacts();
-    res.json(result);
-  } catch (error) {
-    next(error);
-  }
-});
+router.get("/", controllerWrapper(getAll));
 
-router.get("/:id", async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const result = await getById(id);
-    if (!result) {
-      throw new ServiceError(404);
-    }
-    res.json(result);
-  } catch (error) {
-    next(error);
-  }
-});
+router.get("/:id", validationId, controllerWrapper(getById));
 
-router.post("/", validate(validation.contactSchema), async (req, res, next) => {
-  try {
-    const { error } = req.body;
-    if (error) {
-      throw new ServiceError(400, error.message);
-    }
-    const { name, email, phone } = req.body;
-    const result = await addContact(name, email, phone);
-    res.status(201).json(result);
-  } catch (error) {
-    next(error);
-  }
-});
+router.post("/", controllerWrapper(add));
 
-router.put("/:id", validate(validation.contactSchema),async (req, res, next) => {
-  try {
-    const { error } = req.body;
-    if (error) {
-      throw new ServiceError(400, error.message);
-    }
-    const { id } = req.params;
-    const { name, email, phone } = req.body;
-    const result = await updateContact(id, name, email, phone);
-    if (!result) {
-      throw new ServiceError(404);
-    }
-    res.json(result);
-  } catch (error) {
-    next(error);
-  }
-});
+router.put(
+  "/:id",
+  validationId,
+  validation(schemas.add),
+  controllerWrapper(updateById)
+);
 
-router.delete("/:id", async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const result = await removeContact(id);
-    if (!result) {
-      throw new ServiceError(404);
-    }
-    res.json({
-      message: "contact deleted",
-    });
-  } catch (error) {
-    next(error);
-  }
-});
+router.patch(
+  "/:id/favorite",
+  validationId,
+  validation(schemas.updateFavorite),
+  controllerWrapper(updateFavorite)
+);
+
+router.delete("/:id", validationId, controllerWrapper(deleteById));
 
 module.exports = router
