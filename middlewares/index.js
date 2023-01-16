@@ -1,9 +1,15 @@
 const validation = require('./validation');
 const validationId = require('./validationId');
-const validationJoi = require('./validationJoi')
+const authorization = require('./authorization');
+const { addSchema, updateFavoriteSchema } = require('./validationJoi');
+const {registerJoiSchema, subscriptionJoiSchema} = require('./validationJoiUser')
 
 module.exports = {
   validation,
   validationId,
-  validationJoi
+  addSchema,
+  updateFavoriteSchema,
+  registerJoiSchema,
+  subscriptionJoiSchema,
+  authorization,
 };
