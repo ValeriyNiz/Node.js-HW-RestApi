@@ -2,7 +2,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { ServiceError } = require("../../helpers");
 
-const { User } = require("../../models");
+const { User } = require("../../models/user");
 
 const { SECRET_KEY } = process.env;
 const login = async (req, res) => {

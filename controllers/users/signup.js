@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
 const { ServiceError } = require("../../helpers");
 
-const { User } = require("../../models");
+const { User } = require("../../models/user");
 
 const signup = async (req, res) => {
   const { email, password } = req.body;

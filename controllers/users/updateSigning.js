@@ -1,4 +1,4 @@
-const { User } = require("../../models");
+const { User } = require('../../models/user');
 
 const updateSigning = async (req, res) => {
   const { _id } = req.user;
