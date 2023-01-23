@@ -1,12 +1,12 @@
 const express = require("express");
 
-const { validation, authorization } = require("../../middlewares");
+const { validation, authorization, upload } = require("../../middlewares");
 
 const { controllerWrapper } = require("../../helpers");
 
 const { schemas } = require("../../models/user");
 
-const { users: {signup, login, getActual, logout, updateSigning} } = require("../../controllers");
+const { users: {signup, login, getActual, logout, updateSigning, avatars} } = require("../../controllers");
 
 const router = express.Router();
 
@@ -23,6 +23,13 @@ router.patch(
   authorization,
   validation(schemas.subscription),
   controllerWrapper(updateSigning)
+);
+
+router.patch(
+  "/avatars",
+  authorization,
+  upload.single("avatar"),
+  controllerWrapper(avatars)
 );
 
 module.exports = router;
