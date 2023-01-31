@@ -1,5 +1,5 @@
 const { Schema, model } = require("mongoose");
-const { registerJoiSchema, subscriptionJoiSchema } = require('../middlewares');
+const { registerJoiSchema, subscriptionJoiSchema, verifyEmailSchema } = require('../middlewares');
 
 const userSchema = Schema(
   {
@@ -21,6 +21,18 @@ const userSchema = Schema(
       type: String,
       default: null,
     },
+    avatarURL: {
+      type: String,
+      required: true,
+    },
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+      required: [true, "Verify token is required"],
+    },
   },
   { versionKey: false, timestamps: true }
 );
@@ -29,6 +41,7 @@ const schemas = {
   register: registerJoiSchema,
   login: registerJoiSchema,
   subscription: subscriptionJoiSchema,
+  verifyEmail: verifyEmailSchema,
 };
 
 const User = model("user", userSchema);
